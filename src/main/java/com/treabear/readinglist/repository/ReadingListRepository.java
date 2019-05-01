@@ -1,6 +1,8 @@
-package com.treabear.readinglist;
+package com.treabear.readinglist.repository;
 
 import java.util.List;
+
+import com.treabear.readinglist.domain.Book;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

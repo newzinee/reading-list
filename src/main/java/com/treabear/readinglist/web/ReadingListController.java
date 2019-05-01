@@ -1,6 +1,9 @@
-package com.treabear.readinglist;
+package com.treabear.readinglist.web;
 
 import java.util.List;
+
+import com.treabear.readinglist.domain.Book;
+import com.treabear.readinglist.repository.ReadingListRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

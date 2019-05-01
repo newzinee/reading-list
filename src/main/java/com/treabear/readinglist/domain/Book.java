@@ -1,4 +1,4 @@
-package com.treabear.readinglist;
+package com.treabear.readinglist.domain;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
