@@ -2,6 +2,7 @@ package com.treabear.readinglist.web;
 
 import java.util.List;
 
+import com.treabear.readinglist.config.AmazonProperties;
 import com.treabear.readinglist.domain.Book;
 import com.treabear.readinglist.domain.Reader;
 import com.treabear.readinglist.repository.ReadingListRepository;
@@ -13,6 +14,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import lombok.AllArgsConstructor;
+
 /**
  * ReadingListController
  * 
@@ -23,29 +26,28 @@ import org.springframework.web.bind.annotation.RequestMethod;
  */
 @Controller
 @RequestMapping("/")
-@ConfigurationProperties(prefix="amazon")   // 프로퍼티 주입
+@AllArgsConstructor // 생성자 주입
 public class ReadingListController {
 
     private ReadingListRepository readingListRepository;
-    private String associateId;
+    private AmazonProperties amazonProperties;
 
+    /*
     @Autowired
-    public ReadingListController(ReadingListRepository readingListRepository) {
+    public ReadingListController(ReadingListRepository readingListRepository, AmazonProperties amazonProperties) {
+        // AmazonProperties 주입
         this.readingListRepository = readingListRepository;
+        this.AmazonProperties = amazonProperties;
     }
+    */
     
-    // 제휴 ID의 세터 메소드
-    public void setAssociateId(String associateId) { 
-        this.associateId = associateId;
-    }
-
     @RequestMapping(method=RequestMethod.GET)
     public String readersBooks(Reader reader, Model model) {
         List<Book> readingList = readingListRepository.findByReader(reader);
         if(readingList != null) {
             model.addAttribute("books", readingList);
             model.addAttribute("reader", reader);
-            model.addAttribute("amazonID", associateId);
+            model.addAttribute("amazonID", amazonProperties.getAssociateId());
         }
         return "readingList";
     }
