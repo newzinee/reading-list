@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * ReadingListController
@@ -25,6 +26,7 @@ import lombok.AllArgsConstructor;
 @Controller
 @RequestMapping("/")
 @AllArgsConstructor // 생성자 주입
+@Slf4j
 public class ReadingListController {
 
     private ReadingListRepository readingListRepository;
@@ -41,6 +43,11 @@ public class ReadingListController {
     
     @RequestMapping(method=RequestMethod.GET)
     public String readersBooks(Reader reader, Model model) {
+      
+        log.info("info ==================");
+        log.debug("debug ================");
+        log.warn("warn ==================");
+
         List<Book> readingList = readingListRepository.findByReader(reader);
         if(readingList != null) {
             model.addAttribute("books", readingList);
