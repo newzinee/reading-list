@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Oops!</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <div class="errorPage">
+        <span class="oops">Oops!</span>
+        <div><img th:src="@{/images/warning.png}" alt="missing page"></div>
+        <p>There seems to be a problem with the page you requested(<span th:text="${path}"></span>).</p>
+        <p th:text="${'message: ' + message}"></p>
+        <p th:text="${'status: ' + status}"></p>
+        <p th:text="${'timestamp: ' + timestamp}"></p>
+        <p th:text="${'trace: ' + trace}"></p>
+        <p th:text="${'error: ' + error}"></p>
+        <p th:text="${'errors: ' + errors}"></p>
+        <p th:text="${'path: ' + path}"></p>
+    </div>
+</body>
+</html>
