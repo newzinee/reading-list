@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -28,8 +29,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import com.treabear.readinglist.domain.Book;
+import com.treabear.readinglist.domain.Reader;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 
 /**
  * MockMvcWebTests
@@ -40,6 +43,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * 
  * 테스트 수행
  * $ gradle test
+ * 
+ * springSecurity() 메서드는 MockMvc용으로 스프링 시큐리티를 활성화하는 Mock MVC 구성자를 반환한다. 
+ * 아래처럼 간단히 적용하면, MockMvc로 수행하는 모든 요청에 스프링 시큐리티가 적용된다. 
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes=ReadingListApplication.class)
@@ -53,10 +59,13 @@ public class MockMvcWebTests {
 
     @Before
     public void setupMockMvc() {
-        mockMvc = MockMvcBuilders.webAppContextSetup(webContext).build();
+        mockMvc = MockMvcBuilders
+                    .webAppContextSetup(webContext)
+                    .apply(springSecurity())
+                    .build();
     }
 
-    @Test
+    // @Test
     public void homepage() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/"))
             .andExpect(MockMvcResultMatchers.status().isOk())
@@ -74,7 +83,7 @@ public class MockMvcWebTests {
             .andExpect(model().attribute("books", Matchers.is(Matchers.empty())));
     }
 
-    @Test
+    // @Test
     public void postBook() throws Exception {
 
         // 1. 등록하고 요청 결과 검증
@@ -103,5 +112,30 @@ public class MockMvcWebTests {
             .andExpect(model().attribute("books", hasSize(1)))
             .andExpect(model().attribute("books", contains(samePropertyValuesAs(expectedBook))));
 
+    }
+
+    @Test
+    public void hompage_unauthenticatedUser() throws Exception {
+        // 시큐리티 적용 후 
+        mockMvc.perform(get("/"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(header().string("Location", "http://localhost/login"));
+    }
+
+    @Test
+    @WithUserDetails("yoojin")
+    public void homePage_authenticatedUser() throws Exception {
+        // 시큐리티, @WithUserDetails 적용 후 
+        Reader expectedReader = new Reader();   // 반환할 Reader 생성
+        expectedReader.setUsername("yoojin");
+        expectedReader.setPassword("password");
+        expectedReader.setFullname("yoojin jung");
+
+        mockMvc.perform(get("/"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("readingList"))
+                .andExpect(model().attribute("reader", samePropertyValuesAs(expectedReader)))
+                .andExpect(model().attribute("books", hasSize(0)))
+                .andExpect(model().attribute("amazonID", "qvo78"));
     }
 }
