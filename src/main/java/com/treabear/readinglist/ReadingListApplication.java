@@ -8,10 +8,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @SpringBootApplication	// 컴포넌트 검색과 자동 구성 활성화
-public class ReadingListApplication extends WebMvcConfigurerAdapter {
+public class ReadingListApplication implements WebMvcConfigurer {
 
 	public static void main(String[] args) {
 		// 애플리케이션 부트스트랩
