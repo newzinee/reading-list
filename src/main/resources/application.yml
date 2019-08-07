@@ -29,3 +29,10 @@ logging:
 
 amazon:
   associateId: qvo78
+
+
+---
+# JPA
+spring:
+  jpa:
+    open-in-view: false
